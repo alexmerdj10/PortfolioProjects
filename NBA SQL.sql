@@ -1,4 +1,4 @@
-NBA SQL Project
+NBA SQL
 
 Query #1 -- Analyzing the best, worst, and average offensive rating (points per 100 possessions) for each NBA season and calculating year-over-year improvement
 
@@ -61,14 +61,13 @@ SELECT
     player_id,
     player,
 	season,
-    -- Calculating composite score (weights for BPM, USG%, TS%, WS, VORP, PER)
     (0.25 * bpm) + (0.2 * usg_percent) + (0.2 * ts_percent) + (.15 * ws) + (.1 * vorp) + (.1 * per) AS composite_score
 FROM 
     "Advanced"
 WHERE 
     lg = 'NBA' AND
 	bpm IS NOT NULL AND usg_percent IS NOT NULL AND ts_percent IS NOT NULL AND ws IS NOT NULL AND vorp IS NOT NULL AND per IS NOT NULL
-	AND g > 41
+	AND g > 50
 	AND season >= 1980
 ORDER BY 
     composite_score DESC;
@@ -83,7 +82,6 @@ WITH ranked_seasons AS (
         player_id,
         player,
         season,
-        -- Calculating composite score (weights for BPM, USG%, TS%, WS, VORP, PER)
         (0.25 * bpm) + (0.2 * usg_percent) + (0.2 * ts_percent) + (.15 * ws) + (.1 * vorp) + (.1 * per) AS composite_score,
         CASE 
             WHEN season BETWEEN 1980 AND 1994 THEN 'classic'
@@ -108,7 +106,7 @@ WITH ranked_seasons AS (
         AND ws IS NOT NULL 
         AND vorp IS NOT NULL 
         AND per IS NOT NULL
-        AND g > 41
+        AND g > 50
         AND season >= 1980
 )
 SELECT 
@@ -131,7 +129,6 @@ WITH season_leaders AS (
         player_id,
         player,
         season,
-        -- Calculating composite score
         (0.25 * bpm) + (0.2 * ts_percent) + (0.2 * ws) + (0.15 * usg_percent) + (0.1 * per) + (0.1 * vorp) AS composite_score,
         ROW_NUMBER() OVER (
             PARTITION BY season
@@ -168,7 +165,6 @@ WITH season_leaders AS (
         player_id,
         player,
         season,
-        -- Calculating composite score
         (0.25 * bpm) + (0.2 * ts_percent) + (0.2 * ws) + (0.15 * usg_percent) + (0.1 * per) + (0.1 * vorp) AS composite_score,
         ROW_NUMBER() OVER (
             PARTITION BY season
@@ -221,7 +217,7 @@ WHERE
     AND ws IS NOT NULL 
     AND vorp IS NOT NULL 
     AND per IS NOT NULL
-    AND g > 40 -- lowered for players with smaller sample seasons
+    AND g > 50
 ORDER BY 
     composite_score DESC;
 
@@ -255,7 +251,7 @@ WITH season_leaders AS (
         AND ws IS NOT NULL 
         AND vorp IS NOT NULL 
         AND per IS NOT NULL
-        AND g > 60
+        AND g > 50
         AND season >= 2014
 ),
 mvp_winners AS (
