@@ -63,20 +63,20 @@ ORDER BY
 
 
 
-Query #3 -- Calculating a weighted composite score for individual player seasons since 1980 to determine the best overall statistical performances
+Query #3 -- Calculating a weighted composite score for individual player seasons since 2014 to determine the best overall statistical performances in the modern era
 
 SELECT 
     player_id,
     player,
-	season,
-    (0.25 * bpm) + (0.2 * usg_percent) + (0.2 * ts_percent) + (.15 * ws) + (.1 * vorp) + (.1 * per) AS composite_score
+    season,
+    (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) AS composite_score
 FROM 
     "Advanced"
 WHERE 
     lg = 'NBA' AND
-	bpm IS NOT NULL AND usg_percent IS NOT NULL AND ts_percent IS NOT NULL AND ws IS NOT NULL AND vorp IS NOT NULL AND per IS NOT NULL
-	AND g > 50
-	AND season >= 1980
+    bpm IS NOT NULL AND usg_percent IS NOT NULL AND ts_percent IS NOT NULL AND ws IS NOT NULL AND vorp IS NOT NULL AND per IS NOT NULL
+    AND g > 50
+    AND season >= 2014
 ORDER BY 
     composite_score DESC;
 
@@ -90,7 +90,7 @@ WITH ranked_seasons AS (
         player_id,
         player,
         season,
-        (0.25 * bpm) + (0.2 * usg_percent) + (0.2 * ts_percent) + (.15 * ws) + (.1 * vorp) + (.1 * per) AS composite_score,
+        (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) AS composite_score,
         CASE 
             WHEN season BETWEEN 1980 AND 1994 THEN 'classic'
             WHEN season BETWEEN 1995 AND 2013 THEN 'transitional'
@@ -103,7 +103,7 @@ WITH ranked_seasons AS (
                                           WHEN season BETWEEN 2014 AND 2025 THEN 'modern'
                                           ELSE 'other'
                                         END
-                           ORDER BY (0.25 * bpm) + (0.2 * usg_percent) + (0.2 * ts_percent) + (.15 * ws) + (.1 * vorp) + (.1 * per) DESC) AS rank
+                           ORDER BY (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) DESC) AS rank
     FROM 
         "Advanced"
     WHERE 
@@ -137,10 +137,10 @@ WITH season_leaders AS (
         player_id,
         player,
         season,
-        (0.25 * bpm) + (0.2 * ts_percent) + (0.2 * ws) + (0.15 * usg_percent) + (0.1 * per) + (0.1 * vorp) AS composite_score,
+        (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) AS composite_score,
         ROW_NUMBER() OVER (
             PARTITION BY season
-            ORDER BY (0.25 * bpm) + (0.2 * ts_percent) + (0.2 * ws) + (0.15 * usg_percent) + (0.1 * per) + (0.1 * vorp) DESC
+            ORDER BY (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) DESC
         ) AS rank
     FROM 
         "Advanced"
@@ -165,7 +165,6 @@ ORDER BY season;
 
 
 
-
 Query #6 -- Ranking the top 3 players per season since 2021 based on a composite score to highlight elite individual performances
 
 WITH season_leaders AS (
@@ -173,10 +172,10 @@ WITH season_leaders AS (
         player_id,
         player,
         season,
-        (0.25 * bpm) + (0.2 * ts_percent) + (0.2 * ws) + (0.15 * usg_percent) + (0.1 * per) + (0.1 * vorp) AS composite_score,
+        (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) AS composite_score,
         ROW_NUMBER() OVER (
             PARTITION BY season
-            ORDER BY (0.25 * bpm) + (0.2 * ts_percent) + (0.2 * ws) + (0.15 * usg_percent) + (0.1 * per) + (0.1 * vorp) DESC
+            ORDER BY (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) DESC
         ) AS rank
     FROM 
         "Advanced"
@@ -195,7 +194,7 @@ SELECT
     player,
     season,
     composite_score,
-	rank
+    rank
 FROM season_leaders
 WHERE rank <=3
 ORDER BY season;
@@ -208,22 +207,22 @@ Query #7 -- Evaluating Jamal Murray’s best NBA season by calculating and ranki
 SELECT 
     player,
     season,
-    (0.25 * bpm) + 
-    (0.2 * ts_percent) + 
-    (0.2 * ws) + 
-    (0.15 * usg_percent) + 
-    (0.1 * per) + 
-    (0.1 * vorp) AS composite_score
+    (0.284 * bpm) + 
+    (0.001 * ts_percent) + 
+    (0.122 * ws) + 
+    (0.092 * usg_percent) + 
+    (0.220 * per) + 
+    (0.282 * vorp) AS composite_score
 FROM 
     "Advanced"
 WHERE 
     lg = 'NBA'
     AND player = 'Jamal Murray'
-    AND bpm IS NOT NULL 
-    AND usg_percent IS NOT NULL 
-    AND ts_percent IS NOT NULL 
-    AND ws IS NOT NULL 
-    AND vorp IS NOT NULL 
+    AND bpm IS NOT NULL
+    AND usg_percent IS NOT NULL
+    AND ts_percent IS NOT NULL
+    AND ws IS NOT NULL
+    AND vorp IS NOT NULL
     AND per IS NOT NULL
     AND g > 50
 ORDER BY 
@@ -239,15 +238,15 @@ WITH season_leaders AS (
         player_id,
         player,
         season,
-        (0.25 * bpm) + 
-        (0.2 * ts_percent) + 
-        (0.15 * ws) + 
-        (0.2 * usg_percent) + 
-        (0.1 * per) + 
-        (0.1 * vorp) AS composite_score,
+        (0.284 * bpm) + 
+        (0.001 * ts_percent) + 
+        (0.122 * ws) + 
+        (0.092 * usg_percent) + 
+        (0.220 * per) + 
+        (0.282 * vorp) AS composite_score,
         ROW_NUMBER() OVER (
             PARTITION BY season
-            ORDER BY (0.25 * bpm) + (0.2 * ts_percent) + (0.15 * ws) + (0.2 * usg_percent) + (0.1 * per) + (0.1 * vorp) DESC
+            ORDER BY (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) DESC
         ) AS rank
     FROM 
         "Advanced"
