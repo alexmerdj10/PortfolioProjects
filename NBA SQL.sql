@@ -12,9 +12,12 @@ SELECT
     MIN(pts_per_100_poss) AS worst_offense,
 	ROUND(AVG(pts_per_100_poss)) AS avg_offense,
 	ROUND(AVG(pts_per_100_poss) - LAG(AVG(pts_per_100_poss)) OVER (ORDER BY season)) AS rate_of_improvement
-FROM season_stats
-GROUP BY season
-ORDER BY season;
+FROM 
+     season_stats
+GROUP BY 
+     season
+ORDER BY 
+     season;
 
 
 
@@ -30,8 +33,10 @@ WITH player_era AS (
             WHEN pd.from BETWEEN '1995' AND '2013' THEN 'Transitional'
             WHEN pd.from BETWEEN '2014' AND '2025' THEN 'Modern'
         END AS era_drafted
-    FROM "Player Directory" pd
-    WHERE pd.colleges IS NOT NULL
+    FROM 
+	"Player Directory" pd
+    WHERE 
+	pd.colleges IS NOT NULL
 ),
 college_counts AS (
     SELECT
@@ -47,10 +52,13 @@ SELECT
     colleges,
     n_players,
     rank
-FROM college_counts
-WHERE rank <= 10
-AND era_drafted IS NOT NULL
-ORDER BY era_drafted, rank;
+FROM 
+     college_counts
+WHERE 
+     rank <= 10
+     AND era_drafted IS NOT NULL
+ORDER BY 
+     era_drafted, rank;
 
 
 
