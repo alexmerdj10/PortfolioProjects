@@ -246,7 +246,8 @@ WITH season_leaders AS (
         (0.282 * vorp) AS composite_score,
         ROW_NUMBER() OVER (
             PARTITION BY season
-            ORDER BY (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) DESC
+            ORDER BY (0.284 * bpm) + (0.001 * ts_percent) + (0.122 * ws) + 
+                     (0.092 * usg_percent) + (0.220 * per) + (0.282 * vorp) DESC
         ) AS rank
     FROM 
         "Advanced"
@@ -276,14 +277,28 @@ SELECT
     sl.player AS top_composite_player,
     sl.composite_score,
     mw.mvp_player,
-    sl.player = mw.mvp_player AS match
+    sl.rank,
+    CASE 
+        WHEN mw.mvp_player IS NULL THEN NULL
+        WHEN sl.player = mw.mvp_player THEN TRUE
+        ELSE FALSE
+    END AS match,
+    CASE 
+        WHEN mw.mvp_player IS NULL THEN NULL
+        WHEN sl.player = mw.mvp_player THEN 'Matched'
+        ELSE 'Missed'
+    END AS match_status,
+    CASE 
+        WHEN mw.mvp_player IS NULL THEN NULL
+        WHEN sl.player = mw.mvp_player THEN 1
+        ELSE 0
+    END AS match_flag
 FROM 
     season_leaders sl
 LEFT JOIN 
     mvp_winners mw
-ON 
-    sl.season = mw.mvp_season
+    ON sl.season = mw.mvp_season
 WHERE 
-    sl.rank = 1
+    sl.rank <= 2
 ORDER BY 
-    sl.season;
+    sl.season, sl.rank;
