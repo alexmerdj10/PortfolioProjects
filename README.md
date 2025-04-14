@@ -1,4 +1,4 @@
-# 📊 Data Science & Analytics Explorations
+# 📊 Data Science & Analytics Exploration
 
 Welcome! This repository is a collection of projects and exploratory analyses I've worked on to sharpen my data science and analytics skills.
 
